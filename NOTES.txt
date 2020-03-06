@@ -1,0 +1,22 @@
+1) installed go manually since version 13.0 DOESN'T SUPPORT 'modules'
+
+
+    - First removed apt installed go : $ sudo apt remove go*
+    - Download the tar file for linux from the site https://golang.org/dl/ (obtained file go1.14.linux-amd64.tar.gz)
+    - Change to Downloads folder : $ cd ~/Download
+    - Execute the command $ sudo tar -C /usr/local -xzf go1.14.linux-amd64.tar.gz
+    - In the file ~/.bash_aliases add the following lines (if doesn't exist is ok to create it with : $ touch ~/.bash_aliases):
+
+        export GOROOT="/usr/local/go"
+        export GOBIN="$HOME/go/bin"
+        mkdir -p $GOBIN
+        export PATH=$PATH:$GOROOT/bin:$GOBIN
+
+
+2)I'm using the local working directory :
+
+  ~/go/src/github.com/clutso/ttn-app
+
+3) installed ttn client by :
+
+  $ go get github.com/TheThingsNetwork/go-app-sdk
