@@ -1,3 +1,5 @@
+using ubuntu 18.04
+
 1) installed go manually since version 13.0 DOESN'T SUPPORT 'modules'
 
 
@@ -20,3 +22,8 @@
 3) installed ttn client by :
 
   $ go get github.com/TheThingsNetwork/go-app-sdk
+
+4) using env vars TTN_APP_ID & TTN_APP_ACCESS_KEY (you can also add it to ~/.bash_aliases ):
+
+  $ export TTN_APP_ID= <insert your ID>
+  $ export TTN_APP_ACCESS_KEY=< instert your app key >
