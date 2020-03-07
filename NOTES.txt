@@ -27,3 +27,23 @@ using ubuntu 18.04
 
   $ export TTN_APP_ID= <insert your ID>
   $ export TTN_APP_ACCESS_KEY=< instert your app key >
+
+5) payloads are coded as follows:
+
+  a) Field Nr. | sensor ID | value V.G.: payload 01 67 01 0B 02 68 63 03 02 0F A0, could be decoded as follows:
+ ____________________________________________________________________________________________________________________________________________
+|      01 |                    67 | 01 0B     |      02 |                           68 |     63 |       03 |                  02 |     0F A0 |
+|---------+-----------------------+-----------+---------+------------------------------+--------+----------+---------------------+-----------|
+|field #1 |67 means "temperature" | 010b= 267 |field #2 | 68 means "relative_humidity" | 63= 99 | field #3 | 2 means "analog_in" | 0FA0=4000 |
+|____________________________________________________________________________________________________________________________________________|
+  b) However aditional processimg is needed:
+    For 'temperature', value should be divided by 10. V.G: 267/10=26.7
+    For 'realtive_humidity', value should be divided by 2. V.G: 99/2=49.5
+    For 'analog_in', value should be divided by 100.V.G: 4000/100=40.00
+
+  c) by default TTN dump this data into a json as follows:
+    {
+      "analog_in_3": 40,
+      "relative_humidity_2": 49.5,
+      "temperature_1": 26.7
+    }
