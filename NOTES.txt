@@ -47,3 +47,11 @@ using ubuntu 18.04
       "relative_humidity_2": 49.5,
       "temperature_1": 26.7
     }
+6) net/http.ListenAndServe() fucntion, requires special privileges, the easiest way to cope with that is:
+
+  a) compile the application
+    $ go build main.go
+  b)set special privileges to 'main'
+    $ sudo setcap CAP_NET_BIND_SERVICE=+eip main
+  c) Run as normal user
+    $ ./main
