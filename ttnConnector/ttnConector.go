@@ -7,6 +7,7 @@ import (
 	"fmt"
 	//"io/ioutil"
 	"os"
+	notificator "github.com/clutso/ttn-app/notificator"
   httpServer "github.com/clutso/ttn-app/httpServer"
 	ttnsdk "github.com/TheThingsNetwork/go-app-sdk"
 	ttnlog "github.com/TheThingsNetwork/go-utils/log"
@@ -19,6 +20,11 @@ import (
 const (
 	sdkClientName = "ttn-requester"
 )
+
+func SendNotification(){
+	//we still need to define when to send notifications.....
+	notificator.SendMail("extra Details")
+}
 
 func DecodemoreComplexPayload(payload []byte )  map[string]float64  {
 	m := make(map[string]float64)

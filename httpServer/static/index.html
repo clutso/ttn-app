@@ -51,3 +51,160 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
     <a href="#contact" class="w3-bar-item w3-button" style="width:25% !important">CONTACT</a>
   </div>
 </div>
+<!-- Page Content -->
+<div class="w3-padding-large" id="main">
+  <!-- Header/Home -->
+  <header class="w3-container w3-padding-32 w3-center w3-black" id="home">
+    <h1 class="w3-jumbo"><span class="w3-hide-small">I'm</span> Pedro Luna.</h1>
+    	<p><i class="fa fa-microchip"></i> IoT <i class="fa fa-code-fork"></i> Developer <i class="fa fa-code"></i></p>
+    <img src="assets/20a.jpg" alt="pedro" class="w3-image" width="992" height="1108">
+  </header>
+
+  <!-- About Section -->
+  <div class="w3-content w3-justify w3-text-grey w3-padding-64" id="about">
+    <h2 class="w3-text-light-grey">About Me</h2>
+    <hr style="width:200px" class="w3-opacity">
+    <p>
+      Hi, my name is pedro Luna and I'm an enthusiast of IoT. I've been working arround this topic for ~6 years and some results are exposed in this page.
+    </p>
+    <p>Throught my way on mastering the Internet of things I have discovered two important things:</p>
+    <ul>
+      <li>Always be open to new skills, ideas and technologies</li>
+      <li>Have as much fun as you can in the process</li>
+    </ul>
+    <p>Hence, I've decided to get some fun by bulding this server with the following specs:</p>
+    <ul>
+      <li>Server instance running on aws.</li>
+      <li>Instance running on linux.</li>
+      <li>Http service, Email notificator and TTN connector coded in go</li>
+      <li>Go routines installed as OS service.</li>
+      <li>Some content is delivered using go and an html template, some other (like this text) is plan html since I don't have plans to change it frecuently. </li>
+    </ul>
+    <h3 class="w3-padding-16 w3-text-light-grey">My Skills</h3>
+    <p class="w3-wide">Go</p>
+    <div class="w3-white">
+      <div class="w3-dark-grey" style="height:28px;width:70%"></div>
+    </div>
+    <p class="w3-wide">Phython</p>
+    <div class="w3-white">
+      <div class="w3-dark-grey" style="height:28px;width:75%"></div>
+    </div>
+    <p class="w3-wide">C/C++</p>
+    <div class="w3-white">
+      <div class="w3-dark-grey" style="height:28px;width:90%"></div>
+    </div><br>
+  <div class="w3-row w3-center w3-padding-16 w3-section w3-light-grey">
+    <div class="w3-quarter w3-section">
+      <span class="w3-xlarge"><i class="fa fa-handshake-o"></i></i></span><br>
+      Teamworker
+    </div>
+    <div class="w3-quarter w3-section">
+      <span class="w3-xlarge"><i class="fa fa-globe"></i></span><br>
+      International Experienced
+    </div>
+    <div class="w3-quarter w3-section">
+      <span class="w3-xlarge"><i class="fa fa-graduation-cap"></i></span><br>
+      Continuous learner
+    </div>
+    <div class="w3-quarter w3-section">
+      <span class="w3-xlarge"><i class="fa fa-space-shuttle"></i></span><br>
+      Out of the box <br>
+      Thinker      </div>
+    <div class="w3-quarter w3-section">
+          <span class="w3-xlarge"><i class="fa fa-cloud"></i></span><br>
+    Cloud computing
+    </div>
+    <div class="w3-quarter w3-section">
+    <span class="w3-xlarge"><i class="fa fa-terminal"></i></span><br>
+    Bash scripting
+    </div>
+    <div class="w3-quarter w3-section">
+      <span class="w3-xlarge"><i class="fa fa-linux"></i><i class="fa fa-heart"></i>  </span><br>
+      Linux Lover
+    </div>
+    <div class="w3-quarter w3-section">
+      <span class="w3-xlarge"><i class="fa fa-rebel"></i></span><br>
+      4 ever Padawan
+    </div>
+  </div>
+  <a href="/documents/PedroJesusLunaLopez-CV_2020_-EN.pdf" download>
+    <button type="submit" class="w3-button w3-light-grey w3-padding-large w3-section">
+      <i class="fa fa-download"></i> Download Resume
+    </button>
+  </a>
+  <!-- End About Section -->
+  </div>
+<!-- Portfolio Section -->
+  <div class="w3-padding-64 w3-content" id="projects">
+    <h2 class="w3-text-light-grey">My Projects</h2>
+    <hr style="width:200px" class="w3-opacity">
+
+        <a href="/firemonitor">
+          <button type="submit" class="w3-button w3-light-grey w3-padding-large w3-section">
+            <i class="fa fa-fire-extinguisher"></i> Go to IoT Fire Monitor!
+          </button>
+        </a>
+
+
+  <!-- End Portfolio Section -->
+  </div>
+  <!-- Contact Section -->
+  <div class="w3-padding-64 w3-content w3-text-grey" id="contact">
+    <h2 class="w3-text-light-grey">Contact Me</h2>
+    <hr style="width:200px" class="w3-opacity">
+
+    <div class="w3-section">
+      <p><i class="fa fa-map-marker fa-fw w3-text-white w3-xxlarge w3-margin-right"></i> Aguascalientes, MX</p>
+      <!--p><i class="fa fa-phone fa-fw w3-text-white w3-xxlarge w3-margin-right"></i> Phone: </p-->
+      <p><i class="fa fa-envelope fa-fw w3-text-white w3-xxlarge w3-margin-right"> </i> Email: clutso@hotmail.com</p>
+    </div><br>
+    <p>Lets get in touch. Send me a message:</p>
+
+    <form action="/SendEmail" method="post">
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="Name" required name="Name"></p>
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="Email" required name="Email"></p>
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="Subject" required name="Subject"></p>
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="Message" required name="Message"></p>
+      <p>
+        <button class="w3-button w3-light-grey w3-padding-large" type="submit">
+          <i class="fa fa-paper-plane"></i> SEND MESSAGE
+        </button>
+      </p>
+    </form>
+  <!-- End Contact Section -->
+  <h2 class="w3-text-light-grey">Bonus</h2>
+  <p>I like nature, and sometimes had opportunities to have a nice relaxing view. Enjoy!</p>
+  <div class="w3-row-padding" style="margin:0 -16px">
+  <!-- Grid for photos -->
+        <div class="w3-half">
+          <img src="/assets/5.jpg" style="width:100%">
+          <img src="/assets/6.jpg" style="width:100%">
+          <img src="/assets/7.jpg" style="width:100%">
+        </div>
+        <div class="w3-half">
+
+          <img src="/assets/8.jpg" style="width:100%">
+          <img src="/assets/9.jpg" style="width:100%">
+          <img src="/assets/10.jpg" style="width:100%">
+          <img src="/assets/11.jpg" style="width:100%">
+        </div>
+      <!-- End photo grid -->
+      </div>
+  </div>
+
+  <!-- Footer -->
+<footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
+  <i class="fa fa-facebook-official w3-hover-opacity"></i>
+  <i class="fa fa-instagram w3-hover-opacity"></i>
+  <i class="fa fa-snapchat w3-hover-opacity"></i>
+  <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+  <i class="fa fa-twitter w3-hover-opacity"></i>
+  <i class="fa fa-linkedin w3-hover-opacity"></i>
+  <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+<!-- End footer -->
+</footer>
+
+<!-- END PAGE CONTENT -->
+</div>
+</body>
+</html>

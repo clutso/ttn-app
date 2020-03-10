@@ -23,7 +23,7 @@ using ubuntu 18.04
 
   $ go get github.com/TheThingsNetwork/go-app-sdk
 
-4) using env vars TTN_APP_ID & TTN_APP_ACCESS_KEY (you can also add it to ~/.bash_aliases ):
+4) using env vars TTN_APP_ID & TTN_APP_ACCESS_KEY for TTN event listener (you can also add it to ~/.bash_aliases ):
 
   $ export TTN_APP_ID= <insert your ID>
   $ export TTN_APP_ACCESS_KEY=< instert your app key >
@@ -55,3 +55,8 @@ using ubuntu 18.04
     $ sudo setcap CAP_NET_BIND_SERVICE=+eip main
   c) Run as normal user
     $ ./main
+
+7) using env vars NOTIFICATION_ADDRESS & NOTIFICATION_PASS for notifications (you can also add it to ~/.bash_aliases ):
+
+    $ export NOTIFICATION_ADDRESS=<email>
+    $ export NOTIFICATION_PASS=<pass>
