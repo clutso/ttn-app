@@ -3,7 +3,7 @@ package ttnConnector
 import (
 	"encoding/hex"
 	"encoding/binary"
-	//"encoding/json"
+	"encoding/json"
 	"fmt"
 	//"io/ioutil"
 	"os"
@@ -138,6 +138,47 @@ func StartConnector (pd *httpServer.PageData){
 		//PrintInConsole(message.PayloadRaw, pd.Data)
 		//¿call for index to refresh?
 		//httpServer.Index()
+		jsonMD, _:=json.Marshal(message.Metadata)
+		var dat map[string]interface{}
+		if err := json.Unmarshal(jsonMD, &dat); err != nil {
+					 fmt.Println(err)
+			 }
+		//	 fmt.Println(dat)
+
+
+		strs:=dat["gateways"].([]interface{})
+		for x:= range strs{
+			gws:=strs[x].(map[string]interface{})
+			//rssi:=gws["rssi"].(float64)
+			//snr:=gws["snr"].(float64)
+			//gwid:=gws["gtw_id"].(string)
+			locMD:=gws["LocationMetadata"]
+			if locMD!= nil{
+					fmt.Println("There you go!")
+					fmt.Println(locMD)
+					//need to substract and assing values
+
+				}	else{
+				fmt.Println("Uplink without useful info received")
+				fmt.Println(dat)
+			}
+			//fmt.Println(gwid,rssi,snr)
+		}
+		//	var dat1 map[string]interface{}
+		//	if err := json.Unmarshal(gws, &dat1); err != nil {
+		//				 panic(err)
+		//		 }
+
+		//.([]interface{})
+		//for entry:= range gws{
+		//	fmt.Println(string(entry))
+		//}
+		//uncomment the following line to print in console
+		//PrintInConsole(message.PayloadRaw, pd.Data)
+		//¿call for index to refresh?
+		//httpServer.Index()
+
+
   }
 
 }
