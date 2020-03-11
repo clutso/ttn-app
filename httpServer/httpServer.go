@@ -67,6 +67,12 @@ func FireMonitor (w http.ResponseWriter, r *http.Request){
   t.Execute(w, internalPD)
 }
 
+func UpdateDash(w http.ResponseWriter, r *http.Request){
+t, _ :=template.ParseFiles("./httpServer/static/dashboard.html")
+t.Execute(w, internalPD)
+
+}
+
 func StartServer(pd *PageData){
 internalPD=pd
 internalPD.Author = "Pedro Luna"
@@ -74,11 +80,11 @@ fmt.Println("Starting Server")
 http.HandleFunc("/", Index)
 http.HandleFunc("/firemonitor", FireMonitor)
 http.HandleFunc("/SendEmail", SendEmail)
+http.HandleFunc("/updateDashboard", UpdateDash)
 
 fs := http.FileServer(http.Dir("./httpServer/static/assets/"))
 http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 fs1 := http.FileServer(http.Dir("./httpServer/static/documents/"))
 http.Handle("/documents/", http.StripPrefix("/documents/", fs1))
-
 http.ListenAndServe(":80", nil)
 }
