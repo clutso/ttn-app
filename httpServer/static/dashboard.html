@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  {{range $key, $value := .Data}}
+    <div class="w3-quarter w3-section">
+      <span class="w3-xxxlarge">
+        {{if eq $key "Temperature" }}
+          <i class="fa fa-thermometer"></i>
+        {{else if eq $key "Humidity" }}
+          <i class="fa fa-tint"> 	</i>
+        {{else if eq $key "Unknown device" }}
+          <i class="fa fa-fire"> 	</i>
+        {{end}}
+      </span>
+      <br>
+      <strong>{{ $key }}</strong> : <br>{{ $value }}
+    </div>
+  {{end}}
+<html>
