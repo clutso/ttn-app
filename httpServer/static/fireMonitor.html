@@ -1,9 +1,27 @@
 <!DOCTYPE html>
 <html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+
+$.get('/updateDashboard', function(data) {
+  $('#dashContent').html(data);
+});
+setInterval(function()
+{
+  $.get('/updateDashboard', function(data) {
+    $('#dashContent').html(data);
+  });
+}, 5000);
+
+    //alert("emailSent");
+</script>
+</head>
+
 <title>{{.Title}}</title>
 <meta name="description:" content="{{.PageDescription}}">
 <meta name="author" content="{{.Author}}">
-<meta http-equiv="refresh" content="20" />
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -42,29 +60,44 @@ li.Temperature{list-style-type: circle;}
 
 <body class="w3-black">
   <div class="w3-padding-large" id="main">
-    <div class="w3-content w3-justify w3-text-grey w3-padding-64" id="dashboard">
+    <div class="w3-content w3-justify w3-text-light-grey w3-padding-64" id="dashboard">
       <h2 class="w3-text-light-grey">{{.PageDescription}}</h2>
       <hr style="width:200px" class="w3-opacity">
       <p>
         WIP
       </p>
-      <div class="w3-row w3-center w3-padding-16 w3-section w3-light-grey">
-        {{range $key, $value := .Data}}
-          <div class="w3-quarter w3-section">
-            <span class="w3-xxxlarge">
-              {{if eq $key "Temperature" }}
-                <i class="fa fa-thermometer"></i>
-              {{else if eq $key "Humidity" }}
-                <i class="fa fa-tint"> 	</i>
-              {{else if eq $key "Unknown device" }}
-                <i class="fa fa-fire"> 	</i>
-              {{end}}
-            </span>
-            <br>
-            <strong>{{ $key }}</strong> : <br>{{ $value }}
-          </div>
-        {{end}}
+      <div class="w3-row w3-center w3-padding-16 w3-section w3-light-grey" id="dashContent">
       </div>
+
+      <!--maps stuff begins-->
+      <div class="w3-content w3-justify w3-text-light-grey w3-padding-64" >
+        <h3 class="w3-text-light-grey"> Location of monitor</h3>
+        <hr style="width:200px" class="w3-opacity">
+        <p>
+          The position of monitor is an aproximation calculed using LoRaWAN<i class="fa fa-registered"></i> metadata (LoRaWAN<i class="fa fa-registered"></i> GW lat & lon + RSSI) and is marked with <i class="fa fa-map-marker"> in the following map:</i>
+        </p>
+      </div>
+      <div id="googleMap" style="width:100%;height:400px;"></div>
+      <script>
+      function myMap() {
+        var myLatlng = new google.maps.LatLng(21.823211,-102.284552);
+        var mapOptions = {
+          zoom: 17,
+          center: myLatlng
+        }
+      var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
+      var marker = new google.maps.Marker({
+          position: myLatlng,
+          title:"Monitor here"
+        });
+      marker.setMap(map);
+      }
+      // To add the marker to the map, call setMap();
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCa3JrNk9T8oeAKzmnzTCpsK2btSkvjXo&callback=myMap"type="text/javascript"></script>
+
+      <!--maps stuff ends-->
     </div>
     <span> Alternatives for Icons:<br></span>
     <i class="fa fa-fire-extinguisher"> 	</i>
