@@ -15,6 +15,7 @@ Data map[string]float64
 Author string
 PageDescription string
 Title string
+Uri string
 }
 
 //please remove this function or look for a better way to send emails...
@@ -64,6 +65,8 @@ func FireMonitor (w http.ResponseWriter, r *http.Request){
   t, _ :=template.ParseFiles("./httpServer/static/fireMonitor.html")
   internalPD.PageDescription="LoRa Application to monitor the probability of fire in some location"
   internalPD.Title="Fire Monitoring"
+//  internalPD.Uri="https://maps.googleapis.com/maps/api/js?key="+process.env.GOOGLE_API_KEY+"&callback=myMap"
+  internalPD.Uri="https://maps.googleapis.com/maps/api/js?key="+os.Getenv("GOOGLE_API_KEY")+"&callback=myMap"
   t.Execute(w, internalPD)
 }
 
