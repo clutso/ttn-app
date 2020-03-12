@@ -7,16 +7,20 @@ import (
   "net/smtp"
   "html/template"
 )
-
 var internalPD *PageData
 
 type PageData struct {
-Data map[string]float64
 Author string
 PageDescription string
 Title string
 Uri string
+Data map[string]float64
+Lat float64
+Lon float64
+Snr float64
+Rssi float64
 }
+
 
 //please remove this function or look for a better way to send emails...
 func SendEmail(w http.ResponseWriter, r *http.Request){
@@ -41,16 +45,11 @@ func SendEmail(w http.ResponseWriter, r *http.Request){
   	if err != nil {
   		fmt.Println(err)
   	}
-
-//change this to a template please...
-  fmt.Fprintf(w, "<!DOCTYPE html>")
-  fmt.Fprintf(w, "<html>")
-  fmt.Fprintf(w, "Email Sent <br>")
-  fmt.Fprintf(w, "<a href=/>")
-  fmt.Fprintf(w, "<button>back to main page</button>")
-  fmt.Fprintf(w, "</a>")
-  fmt.Fprintf(w, "</html>")
-}
+    t, _ :=template.ParseFiles("./httpServer/static/index.html")
+    internalPD.PageDescription="Peter's protofolio developed in go"
+    internalPD.Title="Peter's way to go"
+    t.Execute(w, internalPD)
+  }
 
 func Index (w http.ResponseWriter, r *http.Request){
   //t, _ :=template.ParseFiles("/home/clutso/go/src/github.com/clutso/ttn-app/httpServer/static/index.html")
@@ -76,6 +75,12 @@ t.Execute(w, internalPD)
 
 }
 
+func UpdateLocation (w http.ResponseWriter, r *http.Request){
+  w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+  fmt.Fprintf(w, "<span> Latitude: <span id=\"lat\"> %f </span> Longitude:  <span id=\"lng\"> %f </span>  </span>", internalPD.Lat, internalPD.Lon)
+}
+
 func StartServer(pd *PageData){
 internalPD=pd
 internalPD.Author = "Pedro Luna"
@@ -84,6 +89,7 @@ http.HandleFunc("/", Index)
 http.HandleFunc("/firemonitor", FireMonitor)
 http.HandleFunc("/SendEmail", SendEmail)
 http.HandleFunc("/updateDashboard", UpdateDash)
+http.HandleFunc("/updateLocation", UpdateLocation)
 
 fs := http.FileServer(http.Dir("./httpServer/static/assets/"))
 http.Handle("/assets/", http.StripPrefix("/assets/", fs))

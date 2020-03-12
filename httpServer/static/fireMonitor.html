@@ -4,17 +4,61 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
 
-$.get('/updateDashboard', function(data) {
-  $('#dashContent').html(data);
-});
-setInterval(function()
-{
+var myLatlng;
+var marker;
+var map;
+var mapOptions;
+var lat
+var lng
+function myMap() {
+  myLatlng = new google.maps.LatLng(21.823211,-102.284552);
+  mapOptions = {
+      zoom: 17,
+      center: myLatlng
+    }
+
+  map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
+  marker = new google.maps.Marker({position: myLatlng,title:"Monitor here"});
+  marker.setMap(map);
+  }
+
+function updtDash(){
   $.get('/updateDashboard', function(data) {
     $('#dashContent').html(data);
   });
-}, 5000);
 
-    //alert("emailSent");
+  getLocation();
+  }
+
+setInterval(function(){
+  updtDash();
+  }, 5000);
+
+function sayHI(){
+  alert("HI")
+}
+//I know this is not an 'elegant' solution... looking for a better method
+function getLocation(){
+  $.get("/updateLocation", function(data) {
+    $('#currentLocation').html(data);
+  });
+
+}
+
+function updtLocation() {
+      //getLocation();
+      lat = parseFloat(document.getElementById('lat').textContent);
+      lng = parseFloat(document.getElementById('lng').textContent);
+      myLatlng=new google.maps.LatLng(lat,lng);
+      mapOptions = {
+          zoom: 17,
+          center: myLatlng
+        }
+      map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
+      marker = new google.maps.Marker({position: myLatlng,title:"Monitor here"});
+      marker.setMap(map);
+      }
+
 </script>
 </head>
 
@@ -58,7 +102,7 @@ li.Temperature{list-style-type: circle;}
   </div>
 </div>
 
-<body class="w3-black">
+<body class="w3-black" onload="updtDash()" >
   <div class="w3-padding-large" id="main">
     <div class="w3-content w3-justify w3-text-light-grey w3-padding-64" id="dashboard">
       <h2 class="w3-text-light-grey">{{.PageDescription}}</h2>
@@ -76,27 +120,14 @@ li.Temperature{list-style-type: circle;}
         <p>
           The position of monitor is an aproximation calculed using LoRaWAN<i class="fa fa-registered"></i> metadata (LoRaWAN<i class="fa fa-registered"></i> GW lat & lon + RSSI) and is marked with <i class="fa fa-map-marker"> in the following map:</i>
         </p>
+        <button class="w3-button w3-light-grey w3-padding-large"  onclick="updtLocation()" type="button">
+          <i class="fa fa-paper-plane"></i> Update Location in map
+        </button>
+
+        <p id ="currentLocation"></p>
       </div>
       <div id="googleMap" style="width:100%;height:400px;"></div>
-      <script>
-      function myMap() {
-        var myLatlng = new google.maps.LatLng(21.823211,-102.284552);
-        var mapOptions = {
-          zoom: 17,
-          center: myLatlng
-        }
-      var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
-      var marker = new google.maps.Marker({
-          position: myLatlng,
-          title:"Monitor here"
-        });
-      marker.setMap(map);
-      }
-      // To add the marker to the map, call setMap();
-    </script>
-
-    <script src="{{.Uri}}"type="text/javascript"></script>
-
+      <script src="{{.Uri}}"type="text/javascript"></script>
       <!--maps stuff ends-->
     </div>
     <span> Alternatives for Icons:<br></span>

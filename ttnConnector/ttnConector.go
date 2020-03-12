@@ -13,7 +13,7 @@ import (
 	ttnlog "github.com/TheThingsNetwork/go-utils/log"
 	"github.com/TheThingsNetwork/go-utils/log/apex"
 	//"github.com/TheThingsNetwork/go-utils/random"
-	//"github.com/TheThingsNetwork/ttn/core/types"
+	"github.com/TheThingsNetwork/ttn/core/types"
 
 )
 
@@ -95,6 +95,51 @@ func decodePayload(payload []byte ) map[string]float64 {
         }
     }
 
+func GetLatLon(md types.Metadata)(float64, float64){
+	rssi:=0.0
+	snr:=0.0
+	jsonMD, _:=json.Marshal(md)
+	var dat map[string]interface{}
+	if err := json.Unmarshal(jsonMD, &dat); err != nil {
+				 fmt.Println(err)
+		 }
+	//	 fmt.Println(dat)
+	strs:=dat["gateways"].([]interface{})
+	for x:= range strs{
+		gws:=strs[x].(map[string]interface{})
+		rssi=gws["rssi"].(float64)
+		snr=gws["snr"].(float64)
+
+		//gwid:=gws["gtw_id"].(string)
+/*
+		locMD:=gws["LocationMetadata"]
+		if locMD!= nil{
+				fmt.Println("There you go!")
+				fmt.Println(locMD)
+				//need to substract and assing values
+
+			}	else{
+			fmt.Println("Uplink without useful info received")
+			fmt.Println(dat)
+		}
+		//fmt.Println(gwid,rssi,snr)
+*/
+	}
+	//	var dat1 map[string]interface{}
+	//	if err := json.Unmarshal(gws, &dat1); err != nil {
+	//				 panic(err)
+	//		 }
+
+	//.([]interface{})
+	//for entry:= range gws{
+	//	fmt.Println(string(entry))
+	//}
+return snr,rssi
+	//return lat, lon
+}
+
+
+
 func StartConnector (pd *httpServer.PageData){
 	log := apex.Stdout() // We use a cli logger at Stdout
 	ttnlog.Set(log)      // Set the logger as default for TTN
@@ -131,53 +176,16 @@ func StartConnector (pd *httpServer.PageData){
 	if err != nil {
   	log.WithError(err).Fatalf("%s: could not subscribe to uplink messages", sdkClientName)
 	}
+	pd.Lat=0.0
+	pd.Lon=0.0
 
 	for message := range uplink {
 		pd.Data= decodePayload (message.PayloadRaw)
+		pd.Lat,pd.Lon  = GetLatLon(message.Metadata)
 		//uncomment the following line to print in console
 		//PrintInConsole(message.PayloadRaw, pd.Data)
 		//¿call for index to refresh?
 		//httpServer.Index()
-		jsonMD, _:=json.Marshal(message.Metadata)
-		var dat map[string]interface{}
-		if err := json.Unmarshal(jsonMD, &dat); err != nil {
-					 fmt.Println(err)
-			 }
-		//	 fmt.Println(dat)
-
-
-		strs:=dat["gateways"].([]interface{})
-		for x:= range strs{
-			gws:=strs[x].(map[string]interface{})
-			//rssi:=gws["rssi"].(float64)
-			//snr:=gws["snr"].(float64)
-			//gwid:=gws["gtw_id"].(string)
-			locMD:=gws["LocationMetadata"]
-			if locMD!= nil{
-					fmt.Println("There you go!")
-					fmt.Println(locMD)
-					//need to substract and assing values
-
-				}	else{
-				fmt.Println("Uplink without useful info received")
-				fmt.Println(dat)
-			}
-			//fmt.Println(gwid,rssi,snr)
-		}
-		//	var dat1 map[string]interface{}
-		//	if err := json.Unmarshal(gws, &dat1); err != nil {
-		//				 panic(err)
-		//		 }
-
-		//.([]interface{})
-		//for entry:= range gws{
-		//	fmt.Println(string(entry))
-		//}
-		//uncomment the following line to print in console
-		//PrintInConsole(message.PayloadRaw, pd.Data)
-		//¿call for index to refresh?
-		//httpServer.Index()
-
 
   }
 
