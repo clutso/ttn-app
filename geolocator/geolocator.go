@@ -1,21 +1,13 @@
 package geolocator
 
 import (
-	//"encoding/hex"
-	//"encoding/binary"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	//"os"
+	"os"
 	"time"
 	"net/http"
 	"bytes"
-	//notificator "github.com/clutso/ttn-app/notificator"
-  //httpServer "github.com/clutso/ttn-app/httpServer"
-	//ttnsdk "github.com/TheThingsNetwork/go-app-sdk"
-	//ttnlog "github.com/TheThingsNetwork/go-utils/log"
-	//"github.com/TheThingsNetwork/go-utils/log/apex"
-	//"github.com/TheThingsNetwork/go-utils/random"
 	"github.com/TheThingsNetwork/ttn/core/types"
 )
 
@@ -142,8 +134,8 @@ func RequestGeoloc(myGateWays []InternalGateway, intFrames []InternalFrame)(floa
 		Timeout: timeout,
 		}
 	request, err:= http.NewRequest("POST", "https://gls.loracloud.com/api/v3/solve/singleframe", bytes.NewBuffer(requestBody))
-//ocultar la llave con una var env
-	request.Header.Set("Ocp-Apim-Subscription-Key","AQEARtaJHFjcEGtvEcUITqDEUHnQyjEeYxHgcJGAzkLGv7vTo0r0")
+	geoLocKey:=os.Getenv("GEOLOCATION_KEY")
+	request.Header.Set("Ocp-Apim-Subscription-Key",geoLocKey)
 	request.Header.Set("Accept", "application/json")
 	resp, err:= client.Do(request)
 	defer resp.Body.Close()
