@@ -3,19 +3,19 @@ package ttnConnector
 import (
 	"encoding/hex"
 	"encoding/binary"
-	"encoding/json"
 	"fmt"
-	//"io/ioutil"
 	"os"
 	notificator "github.com/clutso/ttn-app/notificator"
   httpServer "github.com/clutso/ttn-app/httpServer"
+	geolocator "github.com/clutso/ttn-app/geolocator"
 	ttnsdk "github.com/TheThingsNetwork/go-app-sdk"
 	ttnlog "github.com/TheThingsNetwork/go-utils/log"
 	"github.com/TheThingsNetwork/go-utils/log/apex"
 	//"github.com/TheThingsNetwork/go-utils/random"
 	"github.com/TheThingsNetwork/ttn/core/types"
-
 )
+
+
 
 const (
 	sdkClientName = "ttn-requester"
@@ -95,52 +95,15 @@ func decodePayload(payload []byte ) map[string]float64 {
         }
     }
 
-func GetLatLon(md types.Metadata)(float64, float64){
+func GetLatLon(structMD types.Metadata )(float64, float64){
 	rssi:=0.0
 	snr:=0.0
-	jsonMD, _:=json.Marshal(md)
-	var dat map[string]interface{}
-	if err := json.Unmarshal(jsonMD, &dat); err != nil {
-				 fmt.Println(err)
-		 }
-	//	 fmt.Println(dat)
-	strs:=dat["gateways"].([]interface{})
-	for x:= range strs{
-		gws:=strs[x].(map[string]interface{})
-		rssi=gws["rssi"].(float64)
-		snr=gws["snr"].(float64)
 
-		//gwid:=gws["gtw_id"].(string)
-/*
-		locMD:=gws["LocationMetadata"]
-		if locMD!= nil{
-				fmt.Println("There you go!")
-				fmt.Println(locMD)
-				//need to substract and assing values
-
-			}	else{
-			fmt.Println("Uplink without useful info received")
-			fmt.Println(dat)
-		}
-		//fmt.Println(gwid,rssi,snr)
-*/
-	}
-	//	var dat1 map[string]interface{}
-	//	if err := json.Unmarshal(gws, &dat1); err != nil {
-	//				 panic(err)
-	//		 }
-
-	//.([]interface{})
-	//for entry:= range gws{
-	//	fmt.Println(string(entry))
-	//}
 return snr,rssi
 	//return lat, lon
 }
 
-
-
-func StartConnector (pd *httpServer.PageData){
+func StartConnector (pd *httpServer.PageData, greq *geolocator.InternalData ){
 	log := apex.Stdout() // We use a cli logger at Stdout
 	ttnlog.Set(log)      // Set the logger as default for TTN
 	appID := os.Getenv("TTN_APP_ID")
@@ -171,21 +134,34 @@ func StartConnector (pd *httpServer.PageData){
 	}
 
 	myNewDevicePubSub := pubsub.Device(devToWatch)
-
 	uplink, err := myNewDevicePubSub.SubscribeUplink()
 	if err != nil {
   	log.WithError(err).Fatalf("%s: could not subscribe to uplink messages", sdkClientName)
 	}
+
 	pd.Lat=0.0
 	pd.Lon=0.0
+//	fmt.Println(uplink)
 
+	var intGW []geolocator.InternalGateway
+	var intFrames []geolocator.InternalFrame
 	for message := range uplink {
+
+
 		pd.Data= decodePayload (message.PayloadRaw)
-		pd.Lat,pd.Lon  = GetLatLon(message.Metadata)
+
+		intGW, intFrames=	geolocator.GetFrameData(message.Metadata)
+		for x:= range intGW{
+				if (intGW[x].Latitude==0 && intGW[x].Longitude==0 && intGW[x].Altitude==0){
+		//						fmt.Println("No Lat Lon Data from  Gateway: ",intGW[x].GatewayId ," tryng to simulate")
+								geolocator.SimLatLon(&intGW[x])
+				}
+		}
+		greq.Gateways=intGW
+		greq.Frames=intFrames
+
 		//uncomment the following line to print in console
 		//PrintInConsole(message.PayloadRaw, pd.Data)
-		//¿call for index to refresh?
-		//httpServer.Index()
 
   }
 
