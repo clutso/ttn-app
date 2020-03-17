@@ -6,19 +6,19 @@ import (
   "net/http"
   "net/smtp"
   "html/template"
+  geolocator "github.com/clutso/ttn-app/geolocator"
 )
 var internalPD *PageData
-
+var internalGREQ *geolocator.InternalData
 type PageData struct {
 Author string
 PageDescription string
 Title string
-Uri string
+MapUri string
 Data map[string]float64
-Lat float64
-Lon float64
-Snr float64
-Rssi float64
+Lat float32
+Lon float32
+
 }
 
 
@@ -45,14 +45,16 @@ func SendEmail(w http.ResponseWriter, r *http.Request){
   	if err != nil {
   		fmt.Println(err)
   	}
+    http.Redirect(w, r, "/", 301)
+    /*
     t, _ :=template.ParseFiles("./httpServer/static/index.html")
     internalPD.PageDescription="Peter's protofolio developed in go"
     internalPD.Title="Peter's way to go"
     t.Execute(w, internalPD)
+    */
   }
 
 func Index (w http.ResponseWriter, r *http.Request){
-  //t, _ :=template.ParseFiles("/home/clutso/go/src/github.com/clutso/ttn-app/httpServer/static/index.html")
   t, _ :=template.ParseFiles("./httpServer/static/index.html")
   internalPD.PageDescription="Peter's protofolio developed in go"
   internalPD.Title="Peter's way to go"
@@ -60,29 +62,33 @@ func Index (w http.ResponseWriter, r *http.Request){
 }
 
 func FireMonitor (w http.ResponseWriter, r *http.Request){
-  //t, _ :=template.ParseFiles("/home/clutso/go/src/github.com/clutso/ttn-app/httpServer/static/fireMonitor.html")
   t, _ :=template.ParseFiles("./httpServer/static/fireMonitor.html")
   internalPD.PageDescription="LoRa Application to monitor the probability of fire in some location"
   internalPD.Title="Fire Monitoring"
-//  internalPD.Uri="https://maps.googleapis.com/maps/api/js?key="+process.env.GOOGLE_API_KEY+"&callback=myMap"
-  internalPD.Uri="https://maps.googleapis.com/maps/api/js?key="+os.Getenv("GOOGLE_API_KEY")+"&callback=myMap"
   t.Execute(w, internalPD)
 }
 
 func UpdateDash(w http.ResponseWriter, r *http.Request){
 t, _ :=template.ParseFiles("./httpServer/static/dashboard.html")
 t.Execute(w, internalPD)
-
 }
 
 func UpdateLocation (w http.ResponseWriter, r *http.Request){
-  w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-  fmt.Fprintf(w, "<span> Latitude: <span id=\"lat\"> %f </span> Longitude:  <span id=\"lng\"> %f </span>  </span>", internalPD.Lat, internalPD.Lon)
+  t, _ :=template.ParseFiles("./httpServer/static/latlon.html")
+  internalPD.Lat,internalPD.Lon  = geolocator.RequestGeoloc(internalGREQ.Gateways, internalGREQ.Frames)
+  t.Execute(w, internalPD)
 }
 
-func StartServer(pd *PageData){
+func ShowMap (w http.ResponseWriter, r *http.Request){
+  t, _ :=template.ParseFiles("./httpServer/static/map.html")
+  internalPD.MapUri="https://maps.googleapis.com/maps/api/js?key="+os.Getenv("GOOGLE_API_KEY")+"&callback=myMap"
+  t.Execute(w, internalPD)
+}
+
+func StartServer(pd *PageData, greq *geolocator.InternalData){
 internalPD=pd
+internalGREQ=greq
 internalPD.Author = "Pedro Luna"
 fmt.Println("Starting Server")
 http.HandleFunc("/", Index)
@@ -90,10 +96,14 @@ http.HandleFunc("/firemonitor", FireMonitor)
 http.HandleFunc("/SendEmail", SendEmail)
 http.HandleFunc("/updateDashboard", UpdateDash)
 http.HandleFunc("/updateLocation", UpdateLocation)
+http.HandleFunc("/showmap", ShowMap)
 
-fs := http.FileServer(http.Dir("./httpServer/static/assets/"))
-http.Handle("/assets/", http.StripPrefix("/assets/", fs))
-fs1 := http.FileServer(http.Dir("./httpServer/static/documents/"))
-http.Handle("/documents/", http.StripPrefix("/documents/", fs1))
+assetServer := http.FileServer(http.Dir("./httpServer/static/assets/"))
+http.Handle("/assets/", http.StripPrefix("/assets/", assetServer))
+docServer := http.FileServer(http.Dir("./httpServer/static/documents/"))
+http.Handle("/documents/", http.StripPrefix("/documents/", docServer))
+jsServer := http.FileServer(http.Dir("./httpServer/static/js/"))
+http.Handle("/js/", http.StripPrefix("/js/", jsServer))
+
 http.ListenAndServe(":80", nil)
 }
