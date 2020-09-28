@@ -1,3 +1,16 @@
+macOSX **update**
+I'm not really sure what made my installations worked, but in the end I tried to follow the ubuntu steps and also: 
+
+    cd $HOME/go
+    mkdir $HOME/go/{bin,src} #Assuming you don't already have this folders     
+    mkdir src/githum.com
+    mkdir src/github.com/my-username
+    cd src/github.com/my-username
+    git clone git@github.com:clutso/ttn-app.git 
+    cd ttn-app
+    go mod init github.com/your-username/your-project
+    go get github.com/TheThingsNetwork/go-app-sdk
+
 using ubuntu 18.04
 
 1) installed go manually since version 13.0 DOESN'T SUPPORT 'modules'
